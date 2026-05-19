@@ -12,7 +12,7 @@ const StudentProfile: React.FC = () => {
     useEffect(() => {
         const fetchStudentProfile = async () => {
             try {
-                const profile = await getStudentProfile(studentId);
+                const profile = await getStudentProfile(studentId || '');
                 setStudentProfile(profile);
             } catch (err) {
                 setError('Failed to fetch student profile');
@@ -21,39 +21,49 @@ const StudentProfile: React.FC = () => {
             }
         };
 
-        fetchStudentProfile();
+        if (studentId) {
+            fetchStudentProfile();
+        }
     }, [studentId]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="page"><p>Loading...</p></div>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div className="page"><p>{error}</p></div>;
     }
 
     if (!studentProfile) {
-        return <div>No profile found</div>;
+        return <div className="page"><p>No profile found</p></div>;
     }
 
     return (
-        <div>
+        <div className="page student-profile-page">
             <h1>{studentProfile.name}</h1>
-            <p>Student ID: {studentProfile.id}</p>
-            <h2>Performance Overview</h2>
-            <ul>
-                {studentProfile.grades.map((grade) => (
-                    <li key={grade.subject}>
-                        {grade.subject}: {grade.score}
-                    </li>
-                ))}
-            </ul>
-            <h2>Recommendations</h2>
-            <ul>
-                {studentProfile.recommendations.map((rec, index) => (
-                    <li key={index}>{rec}</li>
-                ))}
-            </ul>
+            <p><strong>ID:</strong> {studentProfile.id}</p>
+            <p><strong>Email:</strong> {studentProfile.email || 'Not provided'}</p>
+            {studentProfile.matricNo && (
+                <p><strong>Matric No:</strong> {studentProfile.matricNo}</p>
+            )}
+            <section>
+                <h2>Performance Overview</h2>
+                <ul>
+                    {studentProfile.grades.map((grade) => (
+                        <li key={`${grade.courseCode || grade.subject}-${grade.semester || ''}`}>
+                            {grade.courseCode || grade.subject}: {grade.score} {grade.semester && `(${grade.semester})`}
+                        </li>
+                    ))}
+                </ul>
+            </section>
+            <section>
+                <h2>Recommendations</h2>
+                <ul>
+                    {(studentProfile.recommendations || []).map((rec, index) => (
+                        <li key={index}>{rec}</li>
+                    ))}
+                </ul>
+            </section>
         </div>
     );
 };

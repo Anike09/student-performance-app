@@ -8,56 +8,58 @@ export const getStudents = async () => {
         const response = await axios.get(`${API_BASE_URL}/students`);
         return response.data;
     } catch (error) {
-        throw new Error('Error fetching students: ' + error.message);
+        throw new Error('Error fetching students: ' + (error as Error).message);
     }
 };
 
+export const fetchStudents = getStudents;
+
 // Function to get a specific student's profile
-export const getStudentProfile = async (studentId) => {
+export const getStudentProfile = async (studentId: string) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/students/${studentId}`);
-        return response.data;
+        return response.data.student ?? response.data;
     } catch (error) {
-        throw new Error('Error fetching student profile: ' + error.message);
+        throw new Error('Error fetching student profile: ' + (error as Error).message);
     }
 };
 
 // Function to get grades for a specific student
-export const getStudentGrades = async (studentId) => {
+export const getStudentGrades = async (studentId: string) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/students/${studentId}/grades`);
         return response.data;
     } catch (error) {
-        throw new Error('Error fetching student grades: ' + error.message);
+        throw new Error('Error fetching student grades: ' + (error as Error).message);
     }
 };
 
 // Function to submit a new grade
-export const submitGrade = async (studentId, gradeData) => {
+export const submitGrade = async (studentId: string, gradeData: any) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/students/${studentId}/grades`, gradeData);
         return response.data;
     } catch (error) {
-        throw new Error('Error submitting grade: ' + error.message);
+        throw new Error('Error submitting grade: ' + (error as Error).message);
     }
 };
 
 // Function to get performance analysis
-export const getPerformanceAnalysis = async (studentId) => {
+export const getPerformanceAnalysis = async (studentId: string) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/students/${studentId}/analysis`);
         return response.data;
     } catch (error) {
-        throw new Error('Error fetching performance analysis: ' + error.message);
+        throw new Error('Error fetching performance analysis: ' + (error as Error).message);
     }
 };
 
 // Function to get personalized recommendations
-export const getRecommendations = async (studentId) => {
+export const getRecommendations = async (studentId: string) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/students/${studentId}/recommendations`);
         return response.data;
     } catch (error) {
-        throw new Error('Error fetching recommendations: ' + error.message);
+        throw new Error('Error fetching recommendations: ' + (error as Error).message);
     }
 };

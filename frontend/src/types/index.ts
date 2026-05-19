@@ -2,7 +2,8 @@ export interface Student {
     id: number;
     name: string;
     email: string;
-    enrolledCourses: Course[];
+    gpa?: number;
+    enrolledCourses?: Course[];
 }
 
 export interface Course {
@@ -12,9 +13,11 @@ export interface Course {
 }
 
 export interface Grade {
-    subject: string;
+    courseCode?: string;
+    subject?: string;
     score: number;
-    semester: string;
+    semester?: string;
+    units?: number;
 }
 
 export interface PerformanceTrend {
@@ -24,11 +27,32 @@ export interface PerformanceTrend {
 
 export interface AtRiskSubject {
     subject: string;
-    averageScore: number;
-    isAtRisk: boolean;
+    averageGrade: number;
+    threshold: number;
 }
 
 export interface ImprovementRecommendation {
     subject: string;
     recommendation: string;
+}
+
+export interface StudentProfileType {
+    id: number;
+    name: string;
+    email?: string;
+    matricNo?: string;
+    grades: Grade[];
+    recommendations?: string[];
+}
+
+export interface Recommendation {
+    title: string;
+    description: string;
+}
+
+export interface AnalysisResult {
+    gpa: number;
+    trend: PerformanceTrend[];
+    atRiskSubjects: AtRiskSubject[];
+    recommendations: string[];
 }

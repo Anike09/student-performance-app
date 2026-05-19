@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { fetchStudents } from '../services/api';
+import { Link } from 'react-router-dom';
+import { getStudents } from '../services/api';
 import { Student } from '../types';
 
 const StudentList: React.FC = () => {
@@ -10,7 +11,7 @@ const StudentList: React.FC = () => {
     useEffect(() => {
         const loadStudents = async () => {
             try {
-                const data = await fetchStudents();
+                const data = await getStudents();
                 setStudents(data);
             } catch (err) {
                 setError('Failed to load students');
@@ -23,20 +24,22 @@ const StudentList: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="page"><p>Loading students...</p></div>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div className="page"><p>{error}</p></div>;
     }
 
     return (
-        <div>
+        <div className="page student-list-page">
             <h1>Student List</h1>
-            <ul>
+            <ul className="student-list">
                 {students.map(student => (
                     <li key={student.id}>
-                        {student.name} - GPA: {student.gpa}
+                        <Link to={`/students/${student.id}`}>
+                            {student.name}
+                        </Link>
                     </li>
                 ))}
             </ul>
