@@ -1,13 +1,16 @@
-import { Student } from '../models/student';
+import { getRepository } from 'typeorm';
+import { Student } from '../entities/Student';
 import { Grade } from '../entities/Grade';
 
 export const analyzePerformance = async (studentId: string): Promise<any> => {
-    const student: Student = await Student.findById(studentId).populate('grades');
-    const grades: Grade[] = student.grades;
+    const studentRepo = getRepository(Student);
+    const student = await studentRepo.findOne({ where: { id: Number(studentId) }, relations: ['grades'] });
+    if (!student) throw new Error('Student not found');
 
+    const grades: Grade[] = student.grades || [];
     const totalGrades = grades.length;
-    const totalPoints = grades.reduce((acc, grade) => acc + grade.points, 0);
-    const gpa = totalPoints / totalGrades;
+    const totalPoints = grades.reduce((acc, grade) => acc + grade.score, 0);
+    const gpa = totalGrades === 0 ? 0 : totalPoints / totalGrades;
 
     const performanceTrends = calculateTrends(grades);
 
@@ -24,10 +27,10 @@ const calculateTrends = (grades: Grade[]): any => {
 };
 
 const identifyAtRiskSubjects = (grades: Grade[]): string[] => {
-    const threshold = 2.0; // Example threshold for at-risk subjects
+    const threshold = 50; // Example threshold for at-risk grades
     return grades
-        .filter(grade => grade.points < threshold)
-        .map(grade => grade.subject);
+        .filter(grade => grade.score < threshold)
+        .map(grade => grade.courseCode);
 };
 
 export function scoreToPoint(score: number): number {
