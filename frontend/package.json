@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "set \"NODE_OPTIONS=--openssl-legacy-provider\" && react-scripts start",
+    "build": "set \"NODE_OPTIONS=--openssl-legacy-provider\" && react-scripts build",
+    "test": "set \"NODE_OPTIONS=--openssl-legacy-provider\" && react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -22,5 +22,17 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
