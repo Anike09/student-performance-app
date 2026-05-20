@@ -19,7 +19,7 @@ export default {
       const student = repo.create({ name, matricNo, email });
       await repo.save(student);
       return res.status(201).json(student);
-    } catch (err) {
+    } catch (err: any) {
       return res.status(400).json({ error: 'Could not create student', details: err.message });
     }
   },
@@ -36,7 +36,7 @@ export default {
     try {
       const analysis = await analyzePerformance(req.params.id);
       return res.json(analysis);
-    } catch (err) {
+    } catch (err: any) {
       return res.status(400).json({ error: 'Could not fetch analysis', details: err.message });
     }
   },
@@ -48,7 +48,7 @@ export default {
       if (!student) return res.status(404).json({ error: 'Student not found' });
       const recommendations = analyzeRiskAndRecommend(student.grades || []);
       return res.json(recommendations);
-    } catch (err) {
+    } catch (err: any) {
       return res.status(400).json({ error: 'Could not fetch recommendations', details: err.message });
     }
   },
@@ -72,7 +72,7 @@ export default {
 
       const updated = await studentRepo.findOne(req.params.id, { relations: ['grades'] });
       return res.status(201).json(updated);
-    } catch (err) {
+    } catch (err: any) {
       return res.status(400).json({ error: 'Could not add grade', details: err.message });
     }
   }
