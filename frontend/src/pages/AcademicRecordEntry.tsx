@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { submitGrade } from '../services/api';
+import React, { useEffect, useState } from 'react';
+import { getStudents, submitGrade } from '../services/api';
+import { Student } from '../types';
 
 const AcademicRecordEntry: React.FC = () => {
+    const [students, setStudents] = useState<Student[]>([]);
     const [studentId, setStudentId] = useState('');
     const [courseCode, setCourseCode] = useState('');
     const [units, setUnits] = useState(3);
@@ -9,12 +11,25 @@ const AcademicRecordEntry: React.FC = () => {
     const [semester, setSemester] = useState('Fall 2025');
     const [message, setMessage] = useState<string | null>(null);
 
+    useEffect(() => {
+        const loadStudents = async () => {
+            try {
+                const data = await getStudents();
+                setStudents(data);
+                if (data.length) setStudentId(String(data[0].id));
+            } catch (err) {
+                setMessage('Unable to load student options.');
+            }
+        };
+        loadStudents();
+    }, []);
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setMessage(null);
 
         if (!studentId || !courseCode) {
-            setMessage('Please provide both a student ID and a course code.');
+            setMessage('Please choose a student and add a course code.');
             return;
         }
 
@@ -36,14 +51,15 @@ const AcademicRecordEntry: React.FC = () => {
             <p>Submit new academic results to keep your profile up to date.</p>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="studentId">Student ID</label>
-                    <input
-                        id="studentId"
-                        type="text"
-                        value={studentId}
-                        onChange={(event) => setStudentId(event.target.value)}
-                        placeholder="Enter student ID"
-                    />
+                    <label htmlFor="studentId">Student</label>
+                    <select id="studentId" value={studentId} onChange={(event) => setStudentId(event.target.value)}>
+                        <option value="">Select student</option>
+                        {students.map((student) => (
+                            <option key={student.id} value={student.id}>
+                                {student.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="courseCode">Course Code</label>

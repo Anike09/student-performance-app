@@ -23,9 +23,13 @@ const GradeChart: React.FC<GradeChartProps> = ({ grades, labels }) => {
     const options = {
         responsive: true,
         scales: {
-            y: {
-                beginAtZero: true,
-            },
+            yAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                },
+            ],
         },
     };
 

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState<string | null>(null);
     const history = useHistory();
+    const { login } = useAuth();
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -16,8 +18,9 @@ const Login: React.FC = () => {
             return;
         }
 
-        setMessage('Login successful. Redirecting...');
-        setTimeout(() => history.push('/dashboard'), 800);
+        const displayName = email.split('@')[0] || 'Student';
+        login(email, displayName);
+        history.push('/dashboard');
     };
 
     return (

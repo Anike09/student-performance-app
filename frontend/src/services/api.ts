@@ -14,11 +14,24 @@ export const getStudents = async () => {
 
 export const fetchStudents = getStudents;
 
+export const createStudent = async (student: { name: string; email: string; matricNo: string }) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/students`, student);
+        return response.data;
+    } catch (error) {
+        throw new Error('Error creating student: ' + (error as Error).message);
+    }
+};
+
 // Function to get a specific student's profile
 export const getStudentProfile = async (studentId: string) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/students/${studentId}`);
-        return response.data.student ?? response.data;
+        const payload = response.data;
+        return {
+            ...payload.student,
+            recommendations: payload.analysis?.recommendations || [],
+        };
     } catch (error) {
         throw new Error('Error fetching student profile: ' + (error as Error).message);
     }

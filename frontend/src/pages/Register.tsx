@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Register: React.FC = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [matricNo, setMatricNo] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState<string | null>(null);
     const history = useHistory();
+    const { register } = useAuth();
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setMessage('');
 
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !matricNo) {
             setMessage('Please fill in all registration fields.');
             return;
         }
 
-        setMessage('Registration successful. Redirecting to login...');
-        setTimeout(() => history.push('/login'), 1000);
+        try {
+            await register(name, email, matricNo);
+            history.push('/dashboard');
+        } catch (err) {
+            setMessage('Registration failed. Please try again.');
+        }
     };
 
     return (
@@ -43,6 +50,16 @@ const Register: React.FC = () => {
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
                         placeholder="student@example.com"
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="matricNo">Matric Number</label>
+                    <input
+                        id="matricNo"
+                        type="text"
+                        value={matricNo}
+                        onChange={(event) => setMatricNo(event.target.value)}
+                        placeholder="Enter matric number"
                     />
                 </div>
                 <div className="form-group">

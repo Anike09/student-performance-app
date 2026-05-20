@@ -9,6 +9,9 @@ export class Student {
   @Column({ unique: true })
   matricNo!: string;
 
+  @Column({ nullable: true })
+  email?: string;
+
   @Column()
   name!: string;
 

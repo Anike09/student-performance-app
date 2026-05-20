@@ -1,50 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getStudents, getPerformanceAnalysis } from '../services/api';
+import { Student, AnalysisResult } from '../types';
 
 const GpaAnalysis: React.FC = () => {
-    const [scores, setScores] = useState<number[]>([72, 68, 80, 75]);
-    const [units, setUnits] = useState<number[]>([3, 4, 3, 2]);
-    const [result, setResult] = useState<{ gpa: number; totalPoints: number; totalUnits: number } | null>(null);
+    const [students, setStudents] = useState<Student[]>([]);
+    const [selectedStudentId, setSelectedStudentId] = useState<string>('');
+    const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    const calculateGpa = () => {
-        const totalUnits = units.reduce((sum, value) => sum + value, 0);
-        const totalPoints = scores.reduce((sum, score, index) => sum + (score * units[index]), 0);
-        const gpa = totalUnits === 0 ? 0 : parseFloat((totalPoints / totalUnits / 20).toFixed(2));
-        setResult({ gpa, totalPoints, totalUnits });
-    };
+    useEffect(() => {
+        const loadStudents = async () => {
+            try {
+                const studentData = await getStudents();
+                setStudents(studentData);
+                if (studentData.length) {
+                    setSelectedStudentId(String(studentData[0].id));
+                }
+            } catch (err) {
+                setError('Unable to load student list.');
+            }
+        };
+        loadStudents();
+    }, []);
+
+    useEffect(() => {
+        const loadAnalysis = async () => {
+            if (!selectedStudentId) return;
+            try {
+                const result = await getPerformanceAnalysis(selectedStudentId);
+                setAnalysis(result);
+            } catch (err) {
+                setError('Failed to calculate GPA.');
+            }
+        };
+        loadAnalysis();
+    }, [selectedStudentId]);
 
     return (
         <div className="page gpa-page">
             <h1>GPA Analysis</h1>
-            <p>Enter your recent course scores and credit units to see a GPA estimate.</p>
-            <div className="analysis-grid">
-                <div className="form-group">
-                    <label>Scores</label>
-                    <input
-                        type="text"
-                        value={scores.join(', ')}
-                        onChange={(event) => setScores(event.target.value.split(',').map((value) => Number(value.trim()) || 0))}
-                        placeholder="72, 68, 80, 75"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Units</label>
-                    <input
-                        type="text"
-                        value={units.join(', ')}
-                        onChange={(event) => setUnits(event.target.value.split(',').map((value) => Number(value.trim()) || 0))}
-                        placeholder="3, 4, 3, 2"
-                    />
-                </div>
+            <p>Select a student to view GPA analysis based on their academic record.</p>
+            <div className="form-group">
+                <label htmlFor="studentSelect">Student</label>
+                <select
+                    id="studentSelect"
+                    value={selectedStudentId}
+                    onChange={(event) => setSelectedStudentId(event.target.value)}
+                >
+                    <option value="">Choose a student</option>
+                    {students.map((student) => (
+                        <option key={student.id} value={student.id}>
+                            {student.name}
+                        </option>
+                    ))}
+                </select>
             </div>
-            <button className="button" onClick={calculateGpa}>
-                Calculate GPA
-            </button>
-            {result && (
+            {error && <p>{error}</p>}
+            {analysis && (
                 <div className="page-section">
                     <h2>Results</h2>
-                    <p>Estimated GPA: <strong>{result.gpa}</strong></p>
-                    <p>Total Units: {result.totalUnits}</p>
-                    <p>Total Points: {result.totalPoints}</p>
+                    <p>Estimated GPA: <strong>{analysis.gpa}</strong></p>
+                    <p>Total Grades: {analysis.totalGrades}</p>
+                    <p>Total Points: {analysis.totalPoints}</p>
                 </div>
             )}
         </div>

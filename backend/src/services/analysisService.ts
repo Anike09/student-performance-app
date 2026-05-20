@@ -10,27 +10,33 @@ export const analyzePerformance = async (studentId: string): Promise<any> => {
     const grades: Grade[] = student.grades || [];
     const totalGrades = grades.length;
     const totalPoints = grades.reduce((acc, grade) => acc + grade.score, 0);
-    const gpa = totalGrades === 0 ? 0 : totalPoints / totalGrades;
+    const gpa = totalGrades === 0 ? 0 : +(totalPoints / totalGrades).toFixed(2);
 
     const performanceTrends = calculateTrends(grades);
+    const atRiskSubjects = identifyAtRiskSubjects(grades);
 
     return {
         gpa,
+        totalGrades,
+        totalPoints,
         performanceTrends,
-        atRiskSubjects: identifyAtRiskSubjects(grades),
+        atRiskSubjects,
     };
 };
 
 const calculateTrends = (grades: Grade[]): any => {
-    // Logic to analyze trends over time
-    return {};
+    const sortedGrades = grades.slice().sort((a, b) => (a.id || 0) - (b.id || 0));
+    return sortedGrades.map((grade, index) => ({
+        label: grade.courseCode || `Course ${index + 1}`,
+        value: grade.score,
+    }));
 };
 
-const identifyAtRiskSubjects = (grades: Grade[]): string[] => {
-    const threshold = 50; // Example threshold for at-risk grades
+const identifyAtRiskSubjects = (grades: Grade[]): Array<{ courseCode: string; score: number }> => {
+    const threshold = 50;
     return grades
-        .filter(grade => grade.score < threshold)
-        .map(grade => grade.courseCode);
+        .filter((grade) => grade.score < threshold)
+        .map((grade) => ({ courseCode: grade.courseCode, score: grade.score }));
 };
 
 export function scoreToPoint(score: number): number {

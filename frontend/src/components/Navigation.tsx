@@ -1,7 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Navigation: React.FC = () => {
+  const { user, logout } = useAuth();
+
   return (
     <nav className="site-nav">
       <div className="brand">Performance Dashboard</div>
@@ -23,12 +26,23 @@ const Navigation: React.FC = () => {
         </NavLink>
       </div>
       <div>
-        <NavLink to="/login" activeClassName="active">
-          Login
-        </NavLink>
-        <NavLink to="/register" activeClassName="active">
-          Register
-        </NavLink>
+        {user ? (
+          <>
+            <span className="nav-user">{user.name}</span>
+            <button className="link-button secondary" onClick={logout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <NavLink to="/login" activeClassName="active">
+              Login
+            </NavLink>
+            <NavLink to="/register" activeClassName="active">
+              Register
+            </NavLink>
+          </>
+        )}
       </div>
     </nav>
   );

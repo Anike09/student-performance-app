@@ -15,6 +15,9 @@ export class Grade {
   @Column('int')
   score!: number;
 
+  @Column({ nullable: true })
+  semester?: string;
+
   @ManyToOne(() => Student, (student) => student.grades, { onDelete: 'CASCADE' })
   student!: Student;
 }
