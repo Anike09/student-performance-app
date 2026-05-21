@@ -2,10 +2,13 @@
   "name": "student-performance-dashboard-frontend",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
-    "test": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts test",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/react-scripts/scripts/start.js",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/react-scripts/scripts/build.js",
+    "test": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/react-scripts/scripts/test.js",
     "eject": "react-scripts eject"
   },
   "dependencies": {
