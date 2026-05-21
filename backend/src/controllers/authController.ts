@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AppDataSource } from "../config/data-source";
+import { env } from "../config/env";
 import { Student } from "../entities/Student";
 
 const studentRepository = AppDataSource.getRepository(Student);
@@ -32,7 +33,7 @@ export const signup = async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { id: student.id },
-      process.env.JWT_SECRET as string,
+      env.jwtSecret,
       { expiresIn: "7d" }
     );
 
@@ -76,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { id: student.id },
-      process.env.JWT_SECRET as string,
+      env.jwtSecret,
       { expiresIn: "7d" }
     );
 

@@ -1,9 +1,9 @@
-import { getRepository } from 'typeorm';
 import { Student } from '../entities/Student';
 import { Grade } from '../entities/Grade';
+import { AppDataSource } from '../config/data-source';
 
 export const analyzePerformance = async (studentId: string): Promise<any> => {
-    const studentRepo = getRepository(Student);
+    const studentRepo = AppDataSource.getRepository(Student);
     const student = await studentRepo.findOne({ where: { id: Number(studentId) }, relations: ['grades'] });
     if (!student) throw new Error('Student not found');
 

@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import studentController from '../controllers/studentController';
+import { login, signup } from '../controllers/authController';
 
 const router = Router();
+
+router.post('/auth/signup', signup);
+router.post('/auth/login', login);
 
 router.get('/students', studentController.list);
 router.post('/students', studentController.create);

@@ -1,15 +1,20 @@
 import "reflect-metadata";
-import { getRepository } from "typeorm";
+import fs from "fs";
+import path from "path";
+import { DataSource } from "typeorm";
 import { Student } from "../entities/Student";
 import { Grade } from "../entities/Grade";
+import { env } from "./env";
 
-export const AppDataSource = {
+const databasePath = path.resolve(process.cwd(), env.dbPath);
+fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+
+export const AppDataSource = new DataSource({
   type: "sqlite",
-  database: "database.sqlite",
-  synchronize: true,
-  logging: false,
+  database: databasePath,
+  synchronize: env.typeormSync,
+  logging: env.typeormLogging,
   entities: [Student, Grade],
   migrations: [],
   subscribers: [],
-  getRepository,
-};
+});

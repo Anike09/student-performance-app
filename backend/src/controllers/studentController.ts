@@ -1,20 +1,20 @@
-import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 import { Student } from '../entities/Student';
 import { Grade } from '../entities/Grade';
 import { analyzeRiskAndRecommend } from '../services/recommendationService';
 import { analyzePerformance } from '../services/analysisService';
+import { AppDataSource } from '../config/data-source';
 
 export default {
   async list(req: Request, res: Response) {
-    const repo = getRepository(Student);
+    const repo = AppDataSource.getRepository(Student);
     const students = await repo.find({ relations: ['grades'] });
     return res.json(students);
   },
 
   async create(req: Request, res: Response) {
     try {
-      const repo = getRepository(Student);
+      const repo = AppDataSource.getRepository(Student);
       const { name, matricNo, email } = req.body;
       const student = repo.create({ name, matricNo, email });
       await repo.save(student);
@@ -25,8 +25,11 @@ export default {
   },
 
   async get(req: Request, res: Response) {
-    const repo = getRepository(Student);
-    const student = await repo.findOne(req.params.id, { relations: ['grades'] });
+    const repo = AppDataSource.getRepository(Student);
+    const student = await repo.findOne({
+      where: { id: Number(req.params.id) },
+      relations: ['grades'],
+    });
     if (!student) return res.status(404).json({ error: 'Student not found' });
     const analysis = analyzeRiskAndRecommend(student.grades || []);
     return res.json({ student, analysis });
@@ -43,8 +46,11 @@ export default {
 
   async recommendations(req: Request, res: Response) {
     try {
-      const repo = getRepository(Student);
-      const student = await repo.findOne(req.params.id, { relations: ['grades'] });
+      const repo = AppDataSource.getRepository(Student);
+      const student = await repo.findOne({
+        where: { id: Number(req.params.id) },
+        relations: ['grades'],
+      });
       if (!student) return res.status(404).json({ error: 'Student not found' });
       const recommendations = analyzeRiskAndRecommend(student.grades || []);
       return res.json(recommendations);
@@ -55,9 +61,11 @@ export default {
 
   async addGrade(req: Request, res: Response) {
     try {
-      const studentRepo = getRepository(Student);
-      const gradeRepo = getRepository(Grade);
-      const student = await studentRepo.findOne(req.params.id);
+      const studentRepo = AppDataSource.getRepository(Student);
+      const gradeRepo = AppDataSource.getRepository(Grade);
+      const student = await studentRepo.findOne({
+        where: { id: Number(req.params.id) },
+      });
       if (!student) return res.status(404).json({ error: 'Student not found' });
 
       const { courseCode, units, score, semester } = req.body;
@@ -70,7 +78,10 @@ export default {
       });
       await gradeRepo.save(grade);
 
-      const updated = await studentRepo.findOne(req.params.id, { relations: ['grades'] });
+      const updated = await studentRepo.findOne({
+        where: { id: Number(req.params.id) },
+        relations: ['grades'],
+      });
       return res.status(201).json(updated);
     } catch (err: any) {
       return res.status(400).json({ error: 'Could not add grade', details: err.message });
