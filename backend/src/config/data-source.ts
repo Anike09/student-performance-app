@@ -4,6 +4,7 @@ import path from "path";
 import { DataSource } from "typeorm";
 import { Student } from "../entities/Student";
 import { Grade } from "../entities/Grade";
+import { Course } from "../entities/Course";
 import { env } from "./env";
 
 const databasePath = path.resolve(process.cwd(), env.dbPath);
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
   database: databasePath,
   synchronize: env.typeormSync,
   logging: env.typeormLogging,
-  entities: [Student, Grade],
+  entities: [Student, Grade, Course],
   migrations: [],
   subscribers: [],
 });

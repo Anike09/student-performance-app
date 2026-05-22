@@ -6,26 +6,31 @@
     "node": "18.x"
   },
   "scripts": {
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/react-scripts/scripts/start.js",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/react-scripts/scripts/build.js",
-    "test": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/react-scripts/scripts/test.js",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider&& node ./node_modules/react-scripts/scripts/start.js",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider&& node ./node_modules/react-scripts/scripts/build.js",
+    "test": "set NODE_OPTIONS=--openssl-legacy-provider&& node ./node_modules/react-scripts/scripts/test.js",
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
     "axios": "^0.21.1",
-    "react-router-dom": "^5.2.0",
     "chart.js": "^2.9.4",
-    "react-chartjs-2": "^2.11.1"
+    "react": "^17.0.2",
+    "react-chartjs-2": "^2.11.1",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "tapable": "^1.1.3"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "typescript": "^4.1.2",
+    "@tailwindcss/postcss7-compat": "^2.2.17",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "autoprefixer": "^9.8.8",
+    "cross-env": "^7.0.3",
+    "postcss": "^7.0.39",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+    "typescript": "^4.9.5"
   },
   "browserslist": {
     "production": [

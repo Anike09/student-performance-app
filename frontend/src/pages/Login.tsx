@@ -9,7 +9,7 @@ const Login: React.FC = () => {
     const history = useHistory();
     const { login } = useAuth();
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setMessage('');
 
@@ -18,9 +18,12 @@ const Login: React.FC = () => {
             return;
         }
 
-        const displayName = email.split('@')[0] || 'Student';
-        login(email, displayName);
-        history.push('/dashboard');
+        try {
+            await login(email, password);
+            history.push('/dashboard');
+        } catch (_error) {
+            setMessage('Login failed. Please check your email and password.');
+        }
     };
 
     return (

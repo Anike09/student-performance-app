@@ -3,9 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Register: React.FC = () => {
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [matricNo, setMatricNo] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState<string | null>(null);
     const history = useHistory();
@@ -15,13 +14,13 @@ const Register: React.FC = () => {
         event.preventDefault();
         setMessage('');
 
-        if (!name || !email || !password || !matricNo) {
+        if (!username || !email || !password) {
             setMessage('Please fill in all registration fields.');
             return;
         }
 
         try {
-            await register(name, email, matricNo);
+            await register(email, username, password);
             history.push('/dashboard');
         } catch (err) {
             setMessage('Registration failed. Please try again.');
@@ -33,13 +32,13 @@ const Register: React.FC = () => {
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="name">Full Name</label>
+                    <label htmlFor="username">Username</label>
                     <input
-                        id="name"
+                        id="username"
                         type="text"
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                        placeholder="Jane Doe"
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                        placeholder="jane.doe"
                     />
                 </div>
                 <div className="form-group">
@@ -50,16 +49,6 @@ const Register: React.FC = () => {
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
                         placeholder="student@example.com"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="matricNo">Matric Number</label>
-                    <input
-                        id="matricNo"
-                        type="text"
-                        value={matricNo}
-                        onChange={(event) => setMatricNo(event.target.value)}
-                        placeholder="Enter matric number"
                     />
                 </div>
                 <div className="form-group">

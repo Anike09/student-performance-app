@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   OneToMany,
 } from "typeorm";
+import { Course } from "./Course";
 import { Grade } from "./Grade";
 
 @Entity()
@@ -29,6 +30,9 @@ export class Student {
 
   @OneToMany(() => Grade, (grade) => grade.student)
   grades!: Grade[];
+
+  @OneToMany(() => Course, (course) => course.student)
+  courses!: Course[];
 
   @CreateDateColumn()
   createdAt!: Date;

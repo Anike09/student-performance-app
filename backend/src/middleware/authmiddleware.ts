@@ -2,8 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 
+export interface AuthPayload {
+  id: number;
+  email: string;
+}
+
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: AuthPayload;
 }
 
 export const authenticateToken = (
@@ -22,12 +27,15 @@ export const authenticateToken = (
   }
 
   try {
-    const verified = jwt.verify(
-      token,
-      env.jwtSecret
-    );
+    const verified = jwt.verify(token, env.jwtSecret);
 
-    req.user = verified;
+    if (typeof verified === "string" || !("id" in verified)) {
+      return res.status(403).json({
+        message: "Invalid token",
+      });
+    }
+
+    req.user = verified as AuthPayload;
 
     next();
   } catch (error) {

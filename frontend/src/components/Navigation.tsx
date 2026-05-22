@@ -28,7 +28,7 @@ const Navigation: React.FC = () => {
       <div>
         {user ? (
           <>
-            <span className="nav-user">{user.name}</span>
+            <span className="nav-user">{user.username}</span>
             <button className="link-button secondary" onClick={logout}>
               Logout
             </button>

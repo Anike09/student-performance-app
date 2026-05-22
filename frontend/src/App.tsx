@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect, RouteProps } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navigation from './components/Navigation';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -10,23 +11,7 @@ import Recommendations from './pages/Recommendations';
 import AcademicRecordEntry from './pages/AcademicRecordEntry';
 import StudentList from './pages/StudentList';
 import StudentProfile from './pages/StudentProfile';
-import { AuthProvider, useAuth } from './context/AuthContext';
-
-const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
-  const { user } = useAuth();
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        user ? (
-          children
-        ) : (
-          <Redirect to={{ pathname: '/login', state: { from: location } }} />
-        )
-      }
-    />
-  );
-};
+import { AuthProvider } from './context/AuthContext';
 
 const App: React.FC = () => {
   return (
@@ -38,24 +23,24 @@ const App: React.FC = () => {
             <Route path="/" exact component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
-            <PrivateRoute path="/dashboard">
+            <ProtectedRoute path="/dashboard">
               <DashboardPage />
-            </PrivateRoute>
-            <PrivateRoute path="/gpa-analysis">
+            </ProtectedRoute>
+            <ProtectedRoute path="/gpa-analysis">
               <GpaAnalysis />
-            </PrivateRoute>
-            <PrivateRoute path="/recommendations">
+            </ProtectedRoute>
+            <ProtectedRoute path="/recommendations">
               <Recommendations />
-            </PrivateRoute>
-            <PrivateRoute path="/academic-record">
+            </ProtectedRoute>
+            <ProtectedRoute path="/academic-record">
               <AcademicRecordEntry />
-            </PrivateRoute>
-            <PrivateRoute path="/students" exact>
+            </ProtectedRoute>
+            <ProtectedRoute path="/students" exact>
               <StudentList />
-            </PrivateRoute>
-            <PrivateRoute path="/students/:studentId">
+            </ProtectedRoute>
+            <ProtectedRoute path="/students/:studentId">
               <StudentProfile />
-            </PrivateRoute>
+            </ProtectedRoute>
             <Route render={() => <div className="page"><h1>Page not found</h1></div>} />
           </Switch>
         </main>

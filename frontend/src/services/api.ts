@@ -1,78 +1,121 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api'; // Adjust the base URL as needed
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const TOKEN_KEY = 'student-dashboard-token';
 
-// Function to get all students
+export interface AuthStudent {
+  id: number;
+  email: string;
+  username: string;
+  createdAt?: string;
+}
+
+export interface AuthResponse {
+  message: string;
+  token: string;
+  student: AuthStudent;
+}
+
+export const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export const getStoredToken = () => localStorage.getItem(TOKEN_KEY);
+
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+    apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    localStorage.removeItem(TOKEN_KEY);
+    delete apiClient.defaults.headers.common.Authorization;
+  }
+};
+
+apiClient.interceptors.request.use((config) => {
+  const token = getStoredToken();
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+export const signupStudent = async (payload: {
+  email: string;
+  username: string;
+  password: string;
+}) => {
+  const response = await apiClient.post<AuthResponse>('/auth/signup', payload);
+  return response.data;
+};
+
+export const loginStudent = async (payload: {
+  email: string;
+  password: string;
+}) => {
+  const response = await apiClient.post<AuthResponse>('/auth/login', payload);
+  return response.data;
+};
+
+export const getCurrentStudent = async () => {
+  const response = await apiClient.get<{ student: AuthStudent }>('/auth/me');
+  return response.data.student;
+};
+
 export const getStudents = async () => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/students`);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error fetching students: ' + (error as Error).message);
-    }
+  const response = await apiClient.get('/students');
+  return response.data;
 };
 
 export const fetchStudents = getStudents;
 
-export const createStudent = async (student: { name: string; email: string; matricNo: string }) => {
-    try {
-        const response = await axios.post(`${API_BASE_URL}/students`, student);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error creating student: ' + (error as Error).message);
-    }
+export const createStudent = async (student: {
+  name: string;
+  email: string;
+  matricNo: string;
+}) => {
+  const response = await apiClient.post('/students', student);
+  return response.data;
 };
 
-// Function to get a specific student's profile
 export const getStudentProfile = async (studentId: string) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/students/${studentId}`);
-        const payload = response.data;
-        return {
-            ...payload.student,
-            recommendations: payload.analysis?.recommendations || [],
-        };
-    } catch (error) {
-        throw new Error('Error fetching student profile: ' + (error as Error).message);
-    }
+  const response = await apiClient.get(`/students/${studentId}`);
+  const payload = response.data;
+  return {
+    ...payload.student,
+    recommendations: payload.analysis?.recommendations || [],
+  };
 };
 
-// Function to get grades for a specific student
 export const getStudentGrades = async (studentId: string) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/students/${studentId}/grades`);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error fetching student grades: ' + (error as Error).message);
-    }
+  const response = await apiClient.get(`/students/${studentId}/grades`);
+  return response.data;
 };
 
-// Function to submit a new grade
-export const submitGrade = async (studentId: string, gradeData: any) => {
-    try {
-        const response = await axios.post(`${API_BASE_URL}/students/${studentId}/grades`, gradeData);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error submitting grade: ' + (error as Error).message);
-    }
+export const submitGrade = async (studentId: string, gradeData: unknown) => {
+  const response = await apiClient.post(`/students/${studentId}/grades`, gradeData);
+  return response.data;
 };
 
-// Function to get performance analysis
 export const getPerformanceAnalysis = async (studentId: string) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/students/${studentId}/analysis`);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error fetching performance analysis: ' + (error as Error).message);
-    }
+  const response = await apiClient.get(`/students/${studentId}/analysis`);
+  return response.data;
 };
 
-// Function to get personalized recommendations
-export const getRecommendations = async (studentId: string) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/students/${studentId}/recommendations`);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error fetching recommendations: ' + (error as Error).message);
-    }
+export const getRecommendations = async (studentId?: string) => {
+  const endpoint = studentId
+    ? `/students/${studentId}/recommendations`
+    : '/courses/recommendations';
+  const response = await apiClient.get(endpoint);
+  return response.data;
+};
+
+export const getGpaSummary = async () => {
+  const response = await apiClient.get('/courses/gpa');
+  return response.data;
 };
