@@ -1,33 +1,15 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <title>Student Performance Analyzer</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 20px; }
-      .card { border: 1px solid #ddd; padding: 12px; margin: 8px 0; border-radius:6px; }
-      input, button { padding:8px; margin:4px; }
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Student Performance Dashboard" />
+    <title>Student Performance Dashboard</title>
   </head>
   <body>
-    <h1>Student Performance Analyzer</h1>
-
-    <section>
-      <h3>Create student</h3>
-      <input id="name" placeholder="Name" />
-      <input id="matric" placeholder="Matric No" />
-      <button onclick="createStudent()">Create</button>
-    </section>
-
-    <section>
-      <h3>Students</h3>
-      <div id="students"></div>
-    </section>
-
-    <script>
-      async function fetchStudents() {
-        const res = await fetch('/api/students');
-        const list = await res.json();
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
         const el = document.getElementById('students');
         el.innerHTML = '';
         list.forEach(s => {
