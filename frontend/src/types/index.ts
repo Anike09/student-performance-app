@@ -52,10 +52,22 @@ export interface Recommendation {
 
 export interface AnalysisResult {
     gpa: number;
+    cgpa?: number;
     totalGrades: number;
     totalPoints: number;
+    courseCount?: number;
+    failedCourses?: number;
     performanceTrends: PerformanceTrend[];
     atRiskSubjects: AtRiskSubject[];
+    recommendations?: Recommendation[];
+    courses?: {
+        code: string;
+        title: string;
+        semester: string;
+        credits: number;
+        grade: string;
+        status: string;
+    }[];
 }
 
 export interface User {
