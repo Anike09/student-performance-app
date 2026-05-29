@@ -92,15 +92,15 @@ const GpaAnalysis: React.FC = () => {
           {error && <div className="rounded-[28px] border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>}
 
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-[28px] bg-slate-50 p-5">
+            <div className="rounded-[28px] bg-slate-50 p-5 card">
               <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Estimated GPA</p>
               <p className="mt-3 text-3xl font-semibold text-slate-900">{analysis?.gpa?.toFixed(2) ?? '3.42'}</p>
             </div>
-            <div className="rounded-[28px] bg-slate-50 p-5">
+            <div className="rounded-[28px] bg-slate-50 p-5 card">
               <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Total grades</p>
               <p className="mt-3 text-3xl font-semibold text-slate-900">{analysis?.totalGrades ?? 24}</p>
             </div>
-            <div className="rounded-[28px] bg-slate-50 p-5">
+            <div className="rounded-[28px] bg-slate-50 p-5 card">
               <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Total points</p>
               <p className="mt-3 text-3xl font-semibold text-slate-900">{analysis?.totalPoints ?? 96}</p>
             </div>

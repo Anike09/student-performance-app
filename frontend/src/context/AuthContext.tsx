@@ -13,7 +13,7 @@ interface AuthContextProps {
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, username: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string, name: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -54,8 +54,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(response.student);
   };
 
-  const register = async (email: string, username: string, password: string) => {
-    const response = await signupStudent({ email, username, password });
+  const register = async (email: string, username: string, password: string, name: string) => {
+    const response = await signupStudent({ email, username, password, name });
     setAuthToken(response.token);
     setToken(response.token);
     setUser(response.student);

@@ -12,16 +12,10 @@ const Home: React.FC = () => {
             Track your GPA, manage academic records, and discover personalized recommendations with a modern analytics dashboard built for student success.
           </p>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center justify-center rounded-[28px] bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-indigo-500"
-            >
+            <Link to="/dashboard" className="btn inline-flex items-center justify-center px-6 py-3">
               View Dashboard
             </Link>
-            <Link
-              to="/login"
-              className="inline-flex items-center justify-center rounded-[28px] border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
-            >
+            <Link to="/login" className="btn bg-white text-slate-900 inline-flex items-center justify-center px-6 py-3">
               Login
             </Link>
           </div>

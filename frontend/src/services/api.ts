@@ -49,8 +49,9 @@ export const signupStudent = async (payload: {
   email: string;
   username: string;
   password: string;
+  name?: string;
 }) => {
-  const response = await apiClient.post<AuthResponse>('/auth/signup', payload);
+  const response = await apiClient.post<AuthResponse>('/auth/register', payload);
   return response.data;
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login: React.FC = () => {
@@ -50,9 +50,12 @@ const Login: React.FC = () => {
                         placeholder="Enter your password"
                     />
                 </div>
-                <button type="submit" className="button">
+                <button type="submit" className="btn">
                     Login
                 </button>
+                <div className="mt-3 text-sm">
+                  <Link to="/forgot-password" className="text-cyan-600 hover:underline">Forgot password?</Link>
+                </div>
                 {message && <p>{message}</p>}
             </form>
         </div>

@@ -3,9 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Register: React.FC = () => {
+    const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState<string | null>(null);
     const history = useHistory();
     const { register } = useAuth();
@@ -14,13 +16,18 @@ const Register: React.FC = () => {
         event.preventDefault();
         setMessage('');
 
-        if (!username || !email || !password) {
+        if (!name || !username || !email || !password || !confirmPassword) {
             setMessage('Please fill in all registration fields.');
             return;
         }
 
+        if (password !== confirmPassword) {
+            setMessage('Passwords do not match.');
+            return;
+        }
+
         try {
-            await register(email, username, password);
+            await register(email, username, password, name);
             history.push('/dashboard');
         } catch (err) {
             setMessage('Registration failed. Please try again.');
@@ -32,6 +39,17 @@ const Register: React.FC = () => {
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
+                    <label htmlFor="name">Full name</label>
+                    <input
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                        placeholder="Jane Doe"
+                    />
+                </div>
+
+                <div className="form-group">
                     <label htmlFor="username">Username</label>
                     <input
                         id="username"
@@ -41,6 +59,7 @@ const Register: React.FC = () => {
                         placeholder="jane.doe"
                     />
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <input
@@ -51,6 +70,7 @@ const Register: React.FC = () => {
                         placeholder="student@example.com"
                     />
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="password">Password</label>
                     <input
@@ -61,7 +81,19 @@ const Register: React.FC = () => {
                         placeholder="Create a password"
                     />
                 </div>
-                <button type="submit" className="button">
+
+                <div className="form-group">
+                    <label htmlFor="confirmPassword">Confirm password</label>
+                    <input
+                        id="confirmPassword"
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(event) => setConfirmPassword(event.target.value)}
+                        placeholder="Repeat your password"
+                    />
+                </div>
+
+                <button type="submit" className="btn">
                     Register
                 </button>
                 {message && <p>{message}</p>}

@@ -143,10 +143,7 @@ const AcademicRecordEntry: React.FC = () => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center rounded-[28px] bg-indigo-600 px-6 py-4 text-sm font-semibold text-white transition hover:bg-indigo-500"
-            >
+            <button type="submit" className="btn">
               Submit Record
             </button>
           </form>

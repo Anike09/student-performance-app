@@ -12,6 +12,7 @@ const publicStudent = (student: Student) => ({
   id: student.id,
   email: student.email,
   username: student.username,
+  name: student.name,
   createdAt: student.createdAt,
 });
 
@@ -22,7 +23,7 @@ const createToken = (student: Student) =>
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { email, username, password } = req.body;
+    const { email, username, password, name } = req.body;
 
     if (!email || !username || !password) {
       return res.status(400).json({
@@ -45,6 +46,7 @@ export const signup = async (req: Request, res: Response) => {
     const student = studentRepository.create({
       email,
       username,
+      name,
       password: hashedPassword,
     });
 

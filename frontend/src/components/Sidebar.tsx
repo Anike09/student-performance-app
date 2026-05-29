@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const menuItems = [
   { path: '/dashboard', label: 'Dashboard' },
   { path: '/gpa-analysis', label: 'GPA Analysis' },
+  { path: '/gpa-calculator', label: 'GPA Calculator' },
   { path: '/recommendations', label: 'Recommendations' },
   { path: '/academic-record', label: 'Add Course' },
 ];
