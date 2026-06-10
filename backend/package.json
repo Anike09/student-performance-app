@@ -20,6 +20,7 @@
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.14",
     "sqlite3": "^5.1.7",
+    "student-performance-dashboard": "file:..",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
